@@ -1,15 +1,15 @@
-BAUTAGEBUCH WEB-APP V0.4
+BAUTAGEBUCH WEB-APP V0.5
 
-Diese Version ist eine Progressive Web App (PWA).
-Für Mikrofonzugriff und Installation muss sie über HTTPS bereitgestellt werden.
+Neu in Version 0.5:
+- Baustellen-Stammdaten lokal anlegen und verwalten
+- Baustellenauswahl wird aus den Stammdaten erzeugt
+- abgeschlossene Tagesberichte werden dauerhaft im Browser gespeichert
+- Berichtsarchiv mit Suche nach Baustelle, Auftrag, Datum und Berichtsnummer
+- archivierte Berichte können erneut geöffnet und als PDF gedruckt werden
+- Entwurf wird weiterhin automatisch lokal gespeichert
+- Spracheingabe bleibt erhalten
+- PWA/Offline-Unterstützung bleibt erhalten
+- App-Icons liegen jetzt im Hauptverzeichnis, damit sie auf GitHub per Smartphone leichter hochgeladen werden können
 
-Enthalten:
-- manifest.webmanifest
-- Service Worker für Offline-Nutzung
-- App-Icons
-- lokale Entwurfsspeicherung im Browser
-- installierbar auf Android/Chrome nach HTTPS-Veröffentlichung
-- Web-Spracheingabe de-DE in sicherem Kontext
-
-Veröffentlichung:
-Den kompletten Ordner auf einen HTTPS-Webhost hochladen (z. B. GitHub Pages, Netlify, Cloudflare Pages oder eigener Webserver).
+Hinweis:
+Die Speicherung erfolgt in V0.5 lokal in Chrome auf dem jeweiligen Gerät. Sie ist noch keine Cloud-Datenbank und daher noch nicht geräteübergreifend synchronisiert. Fotos werden weiterhin nicht dauerhaft archiviert.
