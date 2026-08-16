@@ -18,7 +18,7 @@
 </head>
 <body>
 <div class="app">
-<header class="top"><div class="titleline"><button id="backBtn" class="back hidden">‹</button><div><h1 id="headerTitle">Bautagebuch</h1><small id="headerSub">Web-App · Version 0.52</small></div></div></header>
+<header class="top"><div class="titleline"><button id="backBtn" class="back hidden">‹</button><div><h1 id="headerTitle">Bautagebuch</h1><small id="headerSub">Web-App · Version 0.53</small></div></div></header>
 <main>
 <section id="home" class="page active">
   <p class="muted" id="todayLabel"></p><h2>Guten Morgen, Thomas</h2>
@@ -36,9 +36,11 @@
   <div class="section" onclick="go('staff')"><div><b>① PERSONAL</b><span id="staffStatus" class="muted">Noch nicht ausgefüllt</span></div><strong id="staffMark" class="warn">!</strong></div>
   <div class="section" onclick="go('machines')"><div><b>② MASCHINEN</b><span id="machineStatus" class="muted">Noch nicht ausgefüllt</span></div><strong id="machineMark" class="warn">!</strong></div>
   <div class="section" onclick="go('works')"><div><b>③ ARBEITEN</b><span id="workStatus" class="muted">Noch nicht ausgefüllt</span></div><strong id="workMark" class="warn">!</strong></div>
-  <div class="section" onclick="go('specials')"><div><b>④ BESONDERHEITEN</b><span id="specialStatus" class="muted">Keine</span></div><strong id="specialMark">–</strong></div>
-  <div class="section" onclick="go('photos')"><div><b>⑤ FOTOS</b><span id="photoStatus" class="muted">0 Fotos</span></div><strong>›</strong></div>
-  <div class="section" onclick="go('weather')"><div><b>⑥ WETTER</b><span id="weatherStatus" class="muted">Noch nicht ausgefüllt</span></div><strong id="weatherMark" class="warn">!</strong></div>
+  <div class="section" onclick="go('materials')"><div><b>④ MATERIAL</b><span id="materialStatus" class="muted">Keine Lieferungen</span></div><strong id="materialMark">–</strong></div>
+  <div class="section" onclick="go('specials')"><div><b>⑤ BESONDERHEITEN</b><span id="specialStatus" class="muted">Keine</span></div><strong id="specialMark">–</strong></div>
+  <div class="section" onclick="go('subcontractors')"><div><b>⑥ NACHUNTERNEHMEREINSATZ</b><span id="subStatus" class="muted">Keine</span></div><strong id="subMark">–</strong></div>
+  <div class="section" onclick="go('photos')"><div><b>⑦ FOTOS</b><span id="photoStatus" class="muted">0 Fotos</span></div><strong>›</strong></div>
+  <div class="section" onclick="go('weather')"><div><b>⑧ WETTER</b><span id="weatherStatus" class="muted">Noch nicht ausgefüllt</span></div><strong id="weatherMark" class="warn">!</strong></div>
   <button id="reviewBtn" class="btn secondary" onclick="openReview()" disabled>BERICHT PRÜFEN & ABSCHLIESSEN</button>
 </section>
 <section id="staff" class="page">
@@ -58,14 +60,38 @@
   <div class="row"><div class="field"><label>Menge optional</label><input id="workQty" type="number" step="0.01" placeholder="42,00"></div><div class="field"><label>Einheit</label><select id="workUnit"><option>m</option><option>m²</option><option>m³</option><option>Stk.</option><option>t</option><option>Std.</option></select></div></div>
   <button class="btn secondary" onclick="addWork()">+ WEITERE ARBEIT / EINTRAG HINZUFÜGEN</button><div id="workList" class="card"></div><button class="btn" onclick="saveWorks()">SPEICHERN</button>
 </section>
+<section id="materials" class="page">
+  <p class="muted">Geliefertes Material dieses Bautages. Es können mehrere Lieferungen erfasst werden.</p>
+  <div class="field"><label>Lieferant</label><input id="materialSupplier" placeholder="z. B. Baustoffhandel Muster GmbH"></div>
+  <button id="materialSupplierSpeechBtn" class="btn ghost" onclick="toggleFieldSpeech('materialSupplier','materialSupplierSpeechBtn','materialSpeechStatus','Lieferant sprechen')">🎤 LIEFERANT SPRECHEN</button>
+  <div class="field"><label>Artikel / Material</label><input id="materialArticle" placeholder="z. B. Mineralgemisch 0/32"></div>
+  <button id="materialArticleSpeechBtn" class="btn ghost" onclick="toggleFieldSpeech('materialArticle','materialArticleSpeechBtn','materialSpeechStatus','Artikel oder Material sprechen')">🎤 ARTIKEL SPRECHEN</button>
+  <div id="materialSpeechStatus" class="notice hidden" aria-live="polite"></div>
+  <div class="row"><div class="field"><label>Menge</label><input id="materialQty" type="number" step="0.01" min="0" placeholder="z. B. 27,5"></div><div class="field"><label>Einheit</label><select id="materialUnit"><option>t</option><option>kg</option><option>m</option><option>m²</option><option>m³</option><option>Stk.</option><option>l</option><option>Palette</option><option>Sonstige</option></select></div></div>
+  <button class="btn secondary" onclick="addMaterial()">+ WEITERES MATERIAL HINZUFÜGEN</button>
+  <div id="materialList" class="card"></div>
+  <button class="btn" onclick="saveMaterials()">SPEICHERN</button>
+</section>
 <section id="specials" class="page">
   <button class="btn secondary" onclick="noSpecials()">KEINE BESONDERHEITEN</button>
   <div class="field"><label>Art</label><select id="specialType"><option>Baustellenbesuch</option><option>Abstimmung Bauleitung</option><option>Wetterunterbrechung</option><option>Lieferproblem</option><option>Unbekannte Leitung</option><option>Schaden</option><option>Unfall</option><option>Anwohner / Verkehr</option><option>Sonstiges</option></select></div>
   <div class="field"><label>Beschreibung</label><textarea id="specialText" placeholder="Besonderheit kurz beschreiben"></textarea></div>
+  <button id="specialSpeechBtn" class="btn ghost" onclick="toggleFieldSpeech('specialText','specialSpeechBtn','specialSpeechStatus','Besonderheit sprechen')">🎤 SPRACHEINGABE STARTEN</button>
+  <div id="specialSpeechStatus" class="notice hidden" aria-live="polite"></div>
   <button class="btn secondary" onclick="addSpecial()">+ BESONDERHEIT HINZUFÜGEN</button><div id="specialList" class="card"></div><button class="btn" onclick="saveSpecials()">SPEICHERN</button>
 </section>
+<section id="subcontractors" class="page">
+  <p class="muted">Einsatz von Nachunternehmern an diesem Bautag.</p>
+  <div class="field"><label>Firma</label><input id="subCompany" placeholder="z. B. Muster Tiefbau GmbH"></div>
+  <div class="field"><label>Tätigkeit</label><textarea id="subActivity" placeholder="Ausgeführte Tätigkeit des Nachunternehmers"></textarea></div>
+  <button id="subSpeechBtn" class="btn ghost" onclick="toggleFieldSpeech('subActivity','subSpeechBtn','subSpeechStatus','Tätigkeit des Nachunternehmers sprechen')">🎤 TÄTIGKEIT SPRECHEN</button>
+  <div id="subSpeechStatus" class="notice hidden" aria-live="polite"></div>
+  <button class="btn secondary" onclick="addSubcontractor()">+ WEITEREN NACHUNTERNEHMER HINZUFÜGEN</button>
+  <div id="subList" class="card"></div>
+  <button class="btn" onclick="saveSubcontractors()">SPEICHERN</button>
+</section>
 <section id="photos" class="page">
-  <div class="notice">Fotos werden in Version 0.52 dauerhaft auf diesem Gerät gespeichert und bleiben auch nach dem Schließen der App erhalten.</div>
+  <div class="notice">Fotos werden in Version 0.53 dauerhaft auf diesem Gerät gespeichert und bleiben auch nach dem Schließen der App erhalten.</div>
   <label class="btn" style="display:block;text-align:center">📷 FOTO AUFNEHMEN<input id="photoCameraInput" class="hidden" type="file" accept="image/*" capture="environment"></label>
   <label class="btn secondary" style="display:block;text-align:center">🖼️ AUS GALERIE AUSWÄHLEN<input id="photoGalleryInput" class="hidden" type="file" accept="image/*" multiple></label>
   <div class="field"><label>Beschreibung für neue Fotos optional</label><input id="photoCaption" placeholder="z. B. Schacht RW13 nach Einbau"></div>
@@ -102,7 +128,7 @@
   <h2>Verwaltung</h2>
   <div class="section" onclick="openJobsAdmin()"><div><b>Baustellen</b><span class="muted">Anlegen und verwalten</span></div><strong>›</strong></div>
   <div class="section" onclick="openReports()"><div><b>Berichtsarchiv</b><span class="muted">Abgeschlossene Tagesberichte</span></div><strong>›</strong></div>
-  <div class="card"><b>Speicherung</b><p class="muted">Version 0.52 speichert Baustellen, Entwurf, Fotos und abgeschlossene Berichte dauerhaft auf diesem Gerät in Chrome. Cloud-Synchronisierung folgt in einer späteren Stufe.</p></div>
+  <div class="card"><b>Speicherung</b><p class="muted">Version 0.53 speichert Baustellen, Entwurf, Fotos und abgeschlossene Berichte dauerhaft auf diesem Gerät in Chrome. Cloud-Synchronisierung folgt in einer späteren Stufe.</p></div>
 </section>
 <section id="review" class="page">
   <h2>Tagesbericht prüfen</h2><div id="reviewCard" class="card"></div><button class="btn" onclick="finishReport()">TAGESBERICHT ABSCHLIESSEN</button><button class="btn secondary" onclick="go('report')">NOCHMAL BEARBEITEN</button>
@@ -126,7 +152,7 @@ const defaultJobs=[
 ];
 let history=['home'],selectedJob=null,weatherChoice='',workCategory='',archivedReport=null;
 let jobs=[];
-let state={staffSaved:false,machinesSaved:false,worksSaved:false,specialsSaved:true,weatherSaved:false,staff:[],machines:[],works:[],specials:[],photos:[]};
+let state={staffSaved:false,machinesSaved:false,worksSaved:false,materialsSaved:true,specialsSaved:true,subcontractorsSaved:true,weatherSaved:false,staff:[],machines:[],works:[],materials:[],specials:[],subcontractors:[],photos:[]};
 const STORAGE_KEY='bautagebuch-v05-draft';
 const JOBS_KEY='bautagebuch-v05-jobs';
 const REPORTS_KEY='bautagebuch-v05-reports';
@@ -145,7 +171,15 @@ function formatDateShort(d=new Date()){return new Intl.DateTimeFormat('de-DE',{d
 function persistDraft(){try{const copy={...state,photos:[]};localStorage.setItem(STORAGE_KEY,JSON.stringify({state:copy,selectedJob,date:todayISO()}));saveDraftPhotos()}catch(e){console.warn('Speichern nicht möglich',e)}}
 function restoreDraft(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;const saved=JSON.parse(raw);if(saved&&saved.state){state={...state,...saved.state,photos:[]};selectedJob=saved.selectedJob||null;if(selectedJob)reportJob.textContent=selectedJob.name;weatherChoice=state.weather?.choice||'';setTimeout(loadDraftPhotos,0)}}catch(e){console.warn('Entwurf konnte nicht geladen werden',e)}}
 function setHeader(title,sub){headerTitle.textContent=title;headerSub.textContent=sub||'';backBtn.classList.toggle('hidden',history.length<=1)}
-function go(id,push=true){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');if(push&&history[history.length-1]!==id)history.push(id);const names={home:['Bautagebuch','Web-App · Version 0.52'],jobs:['Neuer Tagesbericht','Baustelle auswählen'],report:['Tagesbericht',selectedJob?.name||'Baustelle'],staff:['Personal',selectedJob?.name||'Baustelle'],machines:['Maschinen',selectedJob?.name||'Baustelle'],works:['Ausgeführte Arbeiten',selectedJob?.name||'Baustelle'],specials:['Besonderheiten',selectedJob?.name||'Baustelle'],photos:['Fotos',selectedJob?.name||'Baustelle'],weather:['Wetter',selectedJob?.name||'Baustelle'],review:['Bericht prüfen',selectedJob?.name||'Baustelle'],finished:['Abgeschlossen',selectedJob?.name||'Baustelle'],preview:['PDF-Vorschau',selectedJob?.name||'Baustelle'],reports:['Berichte','Gespeicherte Tagesberichte'],reportDetail:['Bericht','Archiv'],jobsAdmin:['Baustellen','Stammdaten'],admin:['Verwaltung','Einstellungen']};setHeader(...(names[id]||['Bautagebuch','']));window.scrollTo(0,0)}
+function hydrateWeatherUI(){
+  const w=state.weather||{};
+  weatherChoice=w.choice||weatherChoice||'';
+  tempMorning.value=w.morning??'';
+  tempNoon.value=w.noon??'';
+  rain.value=w.rain||'Nein';
+  document.querySelectorAll('.weather').forEach(b=>b.classList.toggle('selected',b.dataset.v===weatherChoice));
+}
+function go(id,push=true){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='weather')hydrateWeatherUI();if(push&&history[history.length-1]!==id)history.push(id);const names={home:['Bautagebuch','Web-App · Version 0.53'],jobs:['Neuer Tagesbericht','Baustelle auswählen'],report:['Tagesbericht',selectedJob?.name||'Baustelle'],staff:['Personal',selectedJob?.name||'Baustelle'],machines:['Maschinen',selectedJob?.name||'Baustelle'],works:['Ausgeführte Arbeiten',selectedJob?.name||'Baustelle'],materials:['Material',selectedJob?.name||'Baustelle'],specials:['Besonderheiten',selectedJob?.name||'Baustelle'],subcontractors:['Nachunternehmereinsatz',selectedJob?.name||'Baustelle'],photos:['Fotos',selectedJob?.name||'Baustelle'],weather:['Wetter',selectedJob?.name||'Baustelle'],review:['Bericht prüfen',selectedJob?.name||'Baustelle'],finished:['Abgeschlossen',selectedJob?.name||'Baustelle'],preview:['PDF-Vorschau',selectedJob?.name||'Baustelle'],reports:['Berichte','Gespeicherte Tagesberichte'],reportDetail:['Bericht','Archiv'],jobsAdmin:['Baustellen','Stammdaten'],admin:['Verwaltung','Einstellungen']};setHeader(...(names[id]||['Bautagebuch','']));window.scrollTo(0,0)}
 backBtn.onclick=()=>{if(history.length>1){history.pop();go(history[history.length-1],false)}};
 function loadJobs(){try{const raw=localStorage.getItem(JOBS_KEY);jobs=raw?JSON.parse(raw):defaultJobs.map(x=>({...x}));if(!Array.isArray(jobs)||!jobs.length)jobs=defaultJobs.map(x=>({...x}));saveJobs()}catch(e){jobs=defaultJobs.map(x=>({...x}))}}
 function saveJobs(){localStorage.setItem(JOBS_KEY,JSON.stringify(jobs))}
@@ -217,6 +251,29 @@ function toggleSpeech(){
     resetSpeechUI();workText.focus();speechMessage('Die direkte Spracheingabe konnte hier nicht gestartet werden. Bitte die Seite in Google Chrome öffnen oder die Mikrofontaste der Android-Tastatur verwenden.',true);
   }
 }
+function addMaterial(){const supplier=materialSupplier.value.trim(),article=materialArticle.value.trim(),qty=materialQty.value.trim(),unit=materialUnit.value;if(!supplier&&!article&&!qty){alert('Bitte mindestens Lieferant, Artikel oder Menge eingeben.');return}if(!article){alert('Bitte Artikel / Material eingeben.');return}state.materials=state.materials||[];state.materials.push({supplier,article,qty,unit});materialSupplier.value='';materialArticle.value='';materialQty.value='';renderMaterials()}
+function renderMaterials(){state.materials=state.materials||[];materialList.innerHTML=state.materials.length?'':'<span class="muted">Keine Materiallieferungen erfasst.</span>';state.materials.forEach((m,i)=>materialList.insertAdjacentHTML('beforeend',`<div class="special-item"><b>${esc(m.article)}</b><div>${m.supplier?`Lieferant: ${esc(m.supplier)}<br>`:''}${m.qty?`Menge: ${esc(m.qty)} ${esc(m.unit)}`:''}</div><button class="btn secondary mini" onclick="state.materials.splice(${i},1);renderMaterials()">ENTFERNEN</button></div>`))}
+function saveMaterials(){if(materialSupplier.value.trim()||materialArticle.value.trim()||materialQty.value.trim())addMaterial();state.materialsSaved=true;persistDraft();updateReport();go('report')}
+function addSubcontractor(){const company=subCompany.value.trim(),activity=subActivity.value.trim();if(!company&&!activity){alert('Bitte Firma oder Tätigkeit eingeben.');return}if(!company){alert('Bitte Firma eingeben.');return}if(!activity){alert('Bitte Tätigkeit eingeben.');return}state.subcontractors=state.subcontractors||[];state.subcontractors.push({company,activity});subCompany.value='';subActivity.value='';renderSubcontractors()}
+function renderSubcontractors(){state.subcontractors=state.subcontractors||[];subList.innerHTML=state.subcontractors.length?'':'<span class="muted">Keine Nachunternehmer erfasst.</span>';state.subcontractors.forEach((n,i)=>subList.insertAdjacentHTML('beforeend',`<div class="special-item"><b>${esc(n.company)}</b><div>${esc(n.activity)}</div><button class="btn secondary mini" onclick="state.subcontractors.splice(${i},1);renderSubcontractors()">ENTFERNEN</button></div>`))}
+function saveSubcontractors(){if(subCompany.value.trim()||subActivity.value.trim())addSubcontractor();state.subcontractorsSaved=true;persistDraft();updateReport();go('report')}
+let fieldSpeechRecognition=null,fieldSpeechActive=false,fieldSpeechButton=null;
+function toggleFieldSpeech(targetId,buttonId,statusId,promptText){
+  const target=document.getElementById(targetId),btn=document.getElementById(buttonId),status=document.getElementById(statusId);
+  const show=(msg,err=false)=>{status.textContent=msg;status.classList.remove('hidden');if(!err)setTimeout(()=>{if(!fieldSpeechActive)status.classList.add('hidden')},4500)};
+  if(fieldSpeechActive&&fieldSpeechRecognition){try{fieldSpeechRecognition.stop()}catch(e){};return}
+  if(!window.isSecureContext){show('Die Spracheingabe benötigt die veröffentlichte HTTPS-Web-App.',true);return}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){target.focus();show('Direkte Spracherkennung wird hier nicht unterstützt. Bitte die Mikrofontaste der Android-Tastatur verwenden.',true);return}
+  try{
+    fieldSpeechRecognition=new SR();fieldSpeechRecognition.lang='de-DE';fieldSpeechRecognition.interimResults=true;fieldSpeechRecognition.continuous=false;fieldSpeechButton=btn;let finalText='';
+    fieldSpeechRecognition.onstart=()=>{fieldSpeechActive=true;btn.textContent='⏹ SPRACHEINGABE STOPPEN';show('Ich höre zu … '+promptText+'.');};
+    fieldSpeechRecognition.onresult=e=>{let interim='';for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)finalText+=t;else interim+=t}if(finalText){const prefix=target.value.trim();target.value=(prefix?prefix+' ':'')+finalText.trim();finalText=''}if(interim)show('Erkannt: '+interim)};
+    fieldSpeechRecognition.onerror=e=>{const m={'not-allowed':'Mikrofonzugriff wurde nicht erlaubt.','no-speech':'Es wurde keine Sprache erkannt.','audio-capture':'Kein Mikrofon verfügbar.','network':'Spracherkennungsdienst konnte nicht erreicht werden.'};show(m[e.error]||('Spracheingabe nicht möglich ('+e.error+').'),true);fieldSpeechActive=false;btn.textContent=buttonId==='specialSpeechBtn'?'🎤 SPRACHEINGABE STARTEN':buttonId==='subSpeechBtn'?'🎤 TÄTIGKEIT SPRECHEN':buttonId==='materialSupplierSpeechBtn'?'🎤 LIEFERANT SPRECHEN':'🎤 ARTIKEL SPRECHEN'};
+    fieldSpeechRecognition.onend=()=>{fieldSpeechActive=false;btn.textContent=buttonId==='specialSpeechBtn'?'🎤 SPRACHEINGABE STARTEN':buttonId==='subSpeechBtn'?'🎤 TÄTIGKEIT SPRECHEN':buttonId==='materialSupplierSpeechBtn'?'🎤 LIEFERANT SPRECHEN':'🎤 ARTIKEL SPRECHEN';show('Spracheingabe beendet. Text bitte kurz kontrollieren.');};
+    fieldSpeechRecognition.start();
+  }catch(e){fieldSpeechActive=false;target.focus();show('Spracheingabe konnte nicht gestartet werden. Bitte alternativ die Mikrofontaste der Tastatur verwenden.',true)}
+}
 function noSpecials(){state.specials=[];state.specialsSaved=true;persistDraft();renderSpecials();updateReport();go('report')}
 function addSpecial(){const text=specialText.value.trim();if(!text){alert('Bitte Besonderheit beschreiben.');return}state.specials.push({type:specialType.value,text});specialText.value='';renderSpecials()}
 function renderSpecials(){specialList.innerHTML=state.specials.length?'':'<span class="muted">Keine Besonderheiten erfasst.</span>';state.specials.forEach((s,i)=>specialList.insertAdjacentHTML('beforeend',`<div class="special-item"><b>${esc(s.type)}</b><div>${esc(s.text)}</div><button class="btn secondary mini" onclick="state.specials.splice(${i},1);renderSpecials()">ENTFERNEN</button></div>`))}
@@ -229,10 +286,20 @@ async function removePhoto(i){state.photos.splice(i,1);await saveDraftPhotos();r
 function renderPhotos(){photoThumbs.innerHTML='';state.photos.forEach((p,i)=>{const src=p.dataUrl||p.url||'';photoThumbs.insertAdjacentHTML('beforeend',`<div class="thumb"><img src="${src}" alt="Baustellenfoto"><button type="button" onclick="removePhoto(${i})">×</button></div>${p.caption?`<div class="mini muted" style="grid-column:auto">${esc(p.caption)}</div>`:''}`)});updateReport()}
 async function savePhotos(){await saveDraftPhotos();persistDraft();updateReport();go('report')}
 document.querySelectorAll('.weather').forEach(b=>b.onclick=()=>{document.querySelectorAll('.weather').forEach(x=>x.classList.remove('selected'));b.classList.add('selected');weatherChoice=b.dataset.v});
-function saveWeather(){if(!weatherChoice){alert('Bitte Wetter auswählen.');return}state.weather={choice:weatherChoice,morning:tempMorning.value,noon:tempNoon.value,rain:rain.value};state.weatherSaved=true;persistDraft();updateReport();go('report')}
-function updateReport(){const sh=state.staff.reduce((a,x)=>a+timeHours(x),0);staffStatus.textContent=state.staffSaved?`${state.staff.length} Mitarbeiter · ${fmt(sh)} Std.`:'Noch nicht ausgefüllt';mark(staffStatus,staffMark,state.staffSaved);const mh=state.machines.reduce((a,x)=>a+x.hours,0);machineStatus.textContent=state.machinesSaved?`${state.machines.length} Maschinen · ${fmt(mh)} Std.`:'Noch nicht ausgefüllt';mark(machineStatus,machineMark,state.machinesSaved);workStatus.textContent=state.worksSaved?`${state.works.length} Einträge`:'Noch nicht ausgefüllt';mark(workStatus,workMark,state.worksSaved);specialStatus.textContent=state.specials.length?`${state.specials.length} Einträge`:'Keine';specialMark.textContent=state.specials.length?'✓':'–';specialMark.className=state.specials.length?'ok':'';photoStatus.textContent=`${(state.photos||[]).length} Foto${(state.photos||[]).length===1?'':'s'}`;weatherStatus.textContent=state.weatherSaved?`${state.weather.choice} · ${state.weather.morning}–${state.weather.noon} °C`:'Noch nicht ausgefüllt';mark(weatherStatus,weatherMark,state.weatherSaved);reviewBtn.disabled=!(state.staffSaved&&state.machinesSaved&&state.worksSaved&&state.weatherSaved)}
+function saveWeather(){
+  const selected=document.querySelector('.weather.selected');
+  const choice=(selected?.dataset.v||weatherChoice||state.weather?.choice||'').trim();
+  if(!choice){alert('Bitte Wetter auswählen.');return}
+  weatherChoice=choice;
+  state.weather={choice,morning:String(tempMorning.value||'').trim(),noon:String(tempNoon.value||'').trim(),rain:rain.value||'Nein'};
+  state.weatherSaved=true;
+  persistDraft();
+  updateReport();
+  go('report');
+}
+function updateReport(){const sh=state.staff.reduce((a,x)=>a+timeHours(x),0);staffStatus.textContent=state.staffSaved?`${state.staff.length} Mitarbeiter · ${fmt(sh)} Std.`:'Noch nicht ausgefüllt';mark(staffStatus,staffMark,state.staffSaved);const mh=state.machines.reduce((a,x)=>a+x.hours,0);machineStatus.textContent=state.machinesSaved?`${state.machines.length} Maschinen · ${fmt(mh)} Std.`:'Noch nicht ausgefüllt';mark(machineStatus,machineMark,state.machinesSaved);workStatus.textContent=state.worksSaved?`${state.works.length} Einträge`:'Noch nicht ausgefüllt';mark(workStatus,workMark,state.worksSaved);state.materials=state.materials||[];materialStatus.textContent=state.materials.length?`${state.materials.length} Lieferung${state.materials.length===1?'':'en'}`:'Keine Lieferungen';materialMark.textContent=state.materials.length?'✓':'–';materialMark.className=state.materials.length?'ok':'';specialStatus.textContent=state.specials.length?`${state.specials.length} Einträge`:'Keine';specialMark.textContent=state.specials.length?'✓':'–';specialMark.className=state.specials.length?'ok':'';state.subcontractors=state.subcontractors||[];subStatus.textContent=state.subcontractors.length?`${state.subcontractors.length} Einsatz${state.subcontractors.length===1?'':'einsätze'}`:'Keine';subMark.textContent=state.subcontractors.length?'✓':'–';subMark.className=state.subcontractors.length?'ok':'';photoStatus.textContent=`${(state.photos||[]).length} Foto${(state.photos||[]).length===1?'':'s'}`;const w=state.weather||{};weatherStatus.textContent=state.weatherSaved?`${w.choice||'–'} · ${w.morning||'–'}–${w.noon||'–'} °C`:'Noch nicht ausgefüllt';mark(weatherStatus,weatherMark,state.weatherSaved);reviewBtn.disabled=!(state.staffSaved&&state.machinesSaved&&state.worksSaved&&state.weatherSaved)}
 function mark(label,markEl,ok){label.className=ok?'ok':'muted';markEl.textContent=ok?'✓':'!';markEl.className=ok?'ok':'warn'}
-function openReview(){const sh=state.staff.reduce((a,x)=>a+timeHours(x),0),mh=state.machines.reduce((a,x)=>a+x.hours,0);reviewCard.innerHTML=`<div class="reviewline"><b>Personal</b><span>${state.staff.length} MA · ${fmt(sh)} Std.</span></div><div class="reviewline"><b>Maschinen</b><span>${state.machines.length} · ${fmt(mh)} Std.</span></div><div class="reviewline"><b>Arbeiten</b><span>${state.works.length} Einträge</span></div><div class="reviewline"><b>Besonderheiten</b><span>${state.specials.length||'Keine'}</span></div><div class="reviewline"><b>Fotos</b><span>${state.photos.length}</span></div><div class="reviewline"><b>Wetter</b><span>${esc(state.weather?.choice||'')}</span></div>`;go('review')}
+function openReview(){const sh=state.staff.reduce((a,x)=>a+timeHours(x),0),mh=state.machines.reduce((a,x)=>a+x.hours,0);reviewCard.innerHTML=`<div class="reviewline"><b>Personal</b><span>${state.staff.length} MA · ${fmt(sh)} Std.</span></div><div class="reviewline"><b>Maschinen</b><span>${state.machines.length} · ${fmt(mh)} Std.</span></div><div class="reviewline"><b>Arbeiten</b><span>${state.works.length} Einträge</span></div><div class="reviewline"><b>Material</b><span>${(state.materials||[]).length} Lieferungen</span></div><div class="reviewline"><b>Besonderheiten</b><span>${state.specials.length||'Keine'}</span></div><div class="reviewline"><b>Nachunternehmer</b><span>${(state.subcontractors||[]).length||'Keine'}</span></div><div class="reviewline"><b>Fotos</b><span>${state.photos.length}</span></div><div class="reviewline"><b>Wetter</b><span>${esc(state.weather?.choice||'')}</span></div>`;go('review')}
 function getReports(){try{return JSON.parse(localStorage.getItem(REPORTS_KEY)||'[]')}catch(e){return []}}
 function saveReports(reports){localStorage.setItem(REPORTS_KEY,JSON.stringify(reports))}
 async function finishReport(){const nr=new Date().getFullYear()+'-'+String(Date.now()).slice(-4);state.reportNo=nr;const id=Date.now();const fullState=JSON.parse(JSON.stringify(state));const archivedFull={id,reportNo:nr,date:todayISO(),job:{...(selectedJob||{})},state:fullState,html:''};archivedFull.html=buildReportFrom(archivedFull);try{await mediaPut('reports',archivedFull)}catch(e){console.warn('Vollständiger Bericht konnte nicht in IndexedDB archiviert werden',e)}const meta={id,reportNo:nr,date:archivedFull.date,job:archivedFull.job,state:{...fullState,photos:[]},html:''};const reports=getReports();reports.unshift(meta);saveReports(reports);await mediaDelete('drafts',draftMediaKey());localStorage.removeItem(STORAGE_KEY);finishedInfo.innerHTML=`Bautagesbericht Nr. <b>${nr}</b><br>${esc(selectedJob?.name||'Baustelle')}<br>${formatDateShort()}`;go('finished')}
@@ -244,14 +311,17 @@ function formatIsoDate(v){if(!v)return'';const [y,m,d]=v.split('-');return `${d}
 function openPrintPreview(){const html=buildReport();previewSheet.innerHTML=html;printArea.innerHTML=html;go('preview')}
 function buildReport(){return buildReportFrom({reportNo:state.reportNo||'Entwurf',date:todayISO(),job:selectedJob||{},state})}
 function buildReportFrom(r){
-  const st=r.state||{},staff=st.staff||[],mach=st.machines||[],works=st.works||[],specials=st.specials||[],weather=st.weather||{},photos=st.photos||[];
+  const st=r.state||{},staff=st.staff||[],mach=st.machines||[],works=st.works||[],materials=st.materials||[],specials=st.specials||[],subs=st.subcontractors||[],weather=st.weather||{},photos=st.photos||[];
   const sh=staff.reduce((a,x)=>a+timeHours(x),0);
-  const weatherHtml=st.weatherSaved||weather.choice?`<h3>Wetter</h3><p><b>${esc(weather.choice||'–')}</b>${weather.morning!==''&&weather.morning!=null?` · morgens ${esc(weather.morning)} °C`:''}${weather.noon!==''&&weather.noon!=null?` · mittags ${esc(weather.noon)} °C`:''}${weather.rain?` · Niederschlag: ${esc(weather.rain)}`:''}</p>`:'<h3>Wetter</h3><p>Keine Wetterdaten erfasst.</p>';
+  const hasWeather=Boolean(weather.choice||weather.morning||weather.noon||st.weatherSaved);
+  const weatherHtml=hasWeather?`<h3>Wetter</h3><p><b>${esc(weather.choice||'–')}</b>${weather.morning!==''&&weather.morning!=null?` · morgens ${esc(weather.morning)} °C`:''}${weather.noon!==''&&weather.noon!=null?` · mittags ${esc(weather.noon)} °C`:''} · Niederschlag: ${esc(weather.rain||'Nein')}</p>`:'<h3>Wetter</h3><p>Keine Wetterdaten erfasst.</p>';
   const photoHtml=photos.length?`<div class="photo-report-grid">${photos.map((p,i)=>`<div class="photo-report-item"><img src="${p.dataUrl||p.url||''}" alt="Baustellenfoto ${i+1}"><div class="photo-report-caption"><b>Foto ${i+1}</b>${p.caption?` · ${esc(p.caption)}`:''}</div></div>`).join('')}</div>`:'<p>Keine Fotos erfasst.</p>';
-  return `<h2>Bautagesbericht Nr. ${esc(r.reportNo||'Entwurf')}</h2><div>${esc(r.job?.name||'Baustelle')} · Auftrag ${esc(r.job?.order||'')}</div><div>Datum: ${formatIsoDate(r.date)}</div>${weatherHtml}<h3>Personal</h3><p>${staff.length} Mitarbeiter · ${fmt(sh)} Arbeitsstunden</p><table><tr><th>Mitarbeiter</th><th>Beginn</th><th>Ende</th><th>Pause</th></tr>${staff.map(x=>`<tr><td>${esc(x.name||'')}</td><td>${esc(x.start||'')}</td><td>${esc(x.end||'')}</td><td>${fmt(x.pause)} Std.</td></tr>`).join('')}</table><h3>Maschinen</h3>${mach.length?`<table><tr><th>Maschine</th><th>Einsatz</th></tr>${mach.map(x=>`<tr><td>${esc(x.name)}</td><td>${fmt(x.hours)} Std.</td></tr>`).join('')}</table>`:'<p>Keine Maschinen eingetragen.</p>'}<h3>Ausgeführte Arbeiten</h3>${works.length?works.map(w=>`<p><b>${esc(w.category)}</b><br>${esc(w.text)}${w.qty?`<br>Menge: ${esc(w.qty)} ${esc(w.unit)}`:''}</p>`).join(''):'<p>Keine Arbeiten erfasst.</p>'}<h3>Besonderheiten</h3>${specials.length?specials.map(s=>`<p><b>${esc(s.type)}</b><br>${esc(s.text)}</p>`).join(''):'<p>Keine Besonderheiten.</p>'}<h3>Fotodokumentation</h3>${photoHtml}<div class="sig"><div>Vorarbeiter / Auftragnehmer</div><div>Auftraggeber / Bauleitung</div></div>`
+  const materialHtml=materials.length?`<table><tr><th>Lieferant</th><th>Artikel / Material</th><th>Menge</th></tr>${materials.map(m=>`<tr><td>${esc(m.supplier||'–')}</td><td>${esc(m.article||'')}</td><td>${m.qty?esc(m.qty)+' '+esc(m.unit||''): '–'}</td></tr>`).join('')}</table>`:'<p>Keine Materiallieferungen erfasst.</p>';
+  const subHtml=subs.length?subs.map(n=>`<p><b>${esc(n.company)}</b><br>${esc(n.activity)}</p>`).join(''):'<p>Keine Nachunternehmer eingesetzt.</p>';
+  return `<h2>Bautagesbericht Nr. ${esc(r.reportNo||'Entwurf')}</h2><div>${esc(r.job?.name||'Baustelle')} · Auftrag ${esc(r.job?.order||'')}</div><div>Datum: ${formatIsoDate(r.date)}</div>${weatherHtml}<h3>Personal</h3><p>${staff.length} Mitarbeiter · ${fmt(sh)} Arbeitsstunden</p><table><tr><th>Mitarbeiter</th><th>Beginn</th><th>Ende</th><th>Pause</th></tr>${staff.map(x=>`<tr><td>${esc(x.name||'')}</td><td>${esc(x.start||'')}</td><td>${esc(x.end||'')}</td><td>${fmt(x.pause)} Std.</td></tr>`).join('')}</table><h3>Maschinen</h3>${mach.length?`<table><tr><th>Maschine</th><th>Einsatz</th></tr>${mach.map(x=>`<tr><td>${esc(x.name)}</td><td>${fmt(x.hours)} Std.</td></tr>`).join('')}</table>`:'<p>Keine Maschinen eingetragen.</p>'}<h3>Ausgeführte Arbeiten</h3>${works.length?works.map(w=>`<p><b>${esc(w.category)}</b><br>${esc(w.text)}${w.qty?`<br>Menge: ${esc(w.qty)} ${esc(w.unit)}`:''}</p>`).join(''):'<p>Keine Arbeiten erfasst.</p>'}<h3>Materiallieferungen</h3>${materialHtml}<h3>Besonderheiten</h3>${specials.length?specials.map(s=>`<p><b>${esc(s.type)}</b><br>${esc(s.text)}</p>`).join(''):'<p>Keine Besonderheiten.</p>'}<h3>Nachunternehmereinsatz</h3>${subHtml}<h3>Fotodokumentation</h3>${photoHtml}<div class="sig"><div>Vorarbeiter / Auftragnehmer</div><div>Auftraggeber / Bauleitung</div></div>`
 }
 function timeHours(x){const s=x.start.split(':').map(Number),e=x.end.split(':').map(Number);return((e[0]*60+e[1])-(s[0]*60+s[1]))/60-x.pause}function fmt(n){return Number(n||0).toFixed(1).replace('.',',')}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-loadJobs();renderJobList();restoreDraft();todayLabel.textContent=formatDateLong();reportDateLabel.textContent=formatDateShort();renderStaff();renderMachines();renderChips();renderWorks();renderSpecials();renderPhotos();if(state.weatherSaved&&state.weather){tempMorning.value=state.weather.morning||'';tempNoon.value=state.weather.noon||'';rain.value=state.weather.rain||'Nein';document.querySelectorAll('.weather').forEach(b=>b.classList.toggle('selected',b.dataset.v===state.weather.choice));}updateReport();setHeader('Bautagebuch','Web-App · Version 0.52');
+loadJobs();renderJobList();restoreDraft();todayLabel.textContent=formatDateLong();reportDateLabel.textContent=formatDateShort();renderStaff();renderMachines();renderChips();renderWorks();renderMaterials();renderSpecials();renderSubcontractors();renderPhotos();hydrateWeatherUI();updateReport();setHeader('Bautagebuch','Web-App · Version 0.53');
 let deferredInstallPrompt=null;const installBtn=document.getElementById('installBtn');window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;installBtn.classList.remove('hidden')});installBtn.addEventListener('click',async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;installBtn.classList.add('hidden')});window.addEventListener('appinstalled',()=>installBtn.classList.add('hidden'));
 const secureStatus=document.getElementById('secureStatus');if(!window.isSecureContext){secureStatus.textContent='Lokale Vorschau: Mikrofon und Installation funktionieren erst über HTTPS.';secureStatus.classList.remove('hidden')}
 if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(err=>console.warn('Service Worker',err)))}
